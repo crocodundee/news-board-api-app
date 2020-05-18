@@ -3,9 +3,9 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 
-ADMIN_URL = reverse('admin:index')
-USER_ADMIN_URL = reverse('admin:auth_user_changelist')
-ADMIN_LOGIN = reverse('admin:login')
+ADMIN_URL = reverse("admin:index")
+USER_ADMIN_URL = reverse("admin:auth_user_changelist")
+ADMIN_LOGIN = reverse("admin:login")
 
 
 class UserAdminTests(TestCase):
@@ -14,9 +14,7 @@ class UserAdminTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.admin = get_user_model().objects.create_superuser(
-            username='admin',
-            password='adminpass',
-            email='admin@company.com'
+            username="admin", password="adminpass", email="admin@company.com"
         )
         self.client.force_login(user=self.admin)
 
@@ -38,9 +36,7 @@ class UserAdminPublicUsersTests(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.user = get_user_model().objects.create_user(
-            'testuser', 'testpass'
-        )
+        self.user = get_user_model().objects.create_user("testuser", "testpass")
         self.client.force_login(user=self.user)
 
     def test_admin_page_not_available(self):
