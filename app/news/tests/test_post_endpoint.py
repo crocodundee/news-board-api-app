@@ -30,10 +30,10 @@ class PostEndpointTests(TestCase):
     def test_post_listed(self):
         """Test listing all created posts"""
         Post.objects.create(
-            title='Post 1', link='freebsd.org', author=self.user
+            title='Post 1', link='http://www.freebsd.org', author=self.user
         )
         Post.objects.create(
-            title='Post 2', link='kgbase.com', author=self.user
+            title='Post 2', link='http://www.kgbase.com', author=self.user
         )
 
         posts = Post.objects.all()
@@ -51,37 +51,37 @@ class PostEndpointTests(TestCase):
         """Test create post by user"""
         payload = {
             'title': 'Awesome news!',
-            'link': 'wsj.com',
+            'link': 'https://www.wsj.com',
         }
 
         res = self.client.post(POST_URL, payload)
-
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
         exists = Post.objects.filter(title=payload['title']).exists()
-
         self.assertTrue(exists)
+
+        payload = {'title': 'DRF: URLField is cool', 'link': 'nolink provided'}
+        res = self.client.post(POST_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_update(self):
         """Test user can update post"""
         post = Post.objects.create(
-            title='New post', link='wiki.org', author=self.user
+            title='New post', link='http://www.wiki.org', author=self.user
         )
         payload = {'title': 'Updated post title'}
 
         url = detail_url(post.id)
         res = self.client.patch(url, payload)
-
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         post.refresh_from_db()
-
         self.assertEqual(post.title, payload['title'])
 
     def test_post_delete(self):
         """Test user can delete his post"""
         post = Post.objects.create(
-            title='My post', link='newssite.com', author=self.user
+            title='My post', link='https://www.newssite.com', author=self.user
         )
 
         url = detail_url(post.id)
@@ -102,7 +102,7 @@ class UserLimitationOnUpdateOperationsTests(TestCase):
             'postauthor', 'authorpass'
         )
         self.post = Post.objects.create(
-            title='My post', link='github.com', author=self.author
+            title='My post', link='https://www.github.com', author=self.author
         )
         self.user = get_user_model().objects.create_user(
             'testuser', 'testpass'
@@ -111,7 +111,10 @@ class UserLimitationOnUpdateOperationsTests(TestCase):
 
     def test_user_cannot_update_other_author_posts(self):
         """Test user unavailable to update other author post"""
-        payload = {'title': 'Not your post', 'link': 'bitbucket.com'}
+        payload = {
+            'title': 'Not your post',
+            'link': 'https://www.bitbucket.com',
+        }
 
         url = detail_url(self.post.id)
         res = self.client.patch(url, payload)

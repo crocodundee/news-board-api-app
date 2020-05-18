@@ -6,7 +6,7 @@ class Post(models.Model):
     """News post model"""
 
     title = models.CharField(max_length=255, unique=True)
-    link = models.CharField(max_length=255)
+    link = models.URLField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     upvotes = models.IntegerField(blank=True, default=0)
     author = models.ForeignKey(

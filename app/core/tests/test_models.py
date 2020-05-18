@@ -16,7 +16,9 @@ class ModelsTests(TestCase):
         """Test create post model"""
 
         post = Post.objects.create(
-            title='My first post', link="It's great news!", author=self.user
+            title='My first post',
+            link="https://www.news.com",
+            author=self.user,
         )
 
         self.assertEqual(str(post), post.title)
