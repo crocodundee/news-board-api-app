@@ -1,3 +1,17 @@
-from django.db import models  # noqa: F401
+from django.db import models
+from django.conf import settings
 
-# Create your models here.
+
+class Post(models.Model):
+    """News post model"""
+
+    title = models.CharField(max_length=255, unique=True)
+    link = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    upvotes = models.IntegerField(blank=True, default=0)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.title

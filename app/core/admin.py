@@ -3,6 +3,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 
+from core import models
+
 
 class UserAdmin(BaseUserAdmin):
     """Admin panel configuration for User model"""
@@ -21,3 +23,4 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(models.Post)
