@@ -6,8 +6,8 @@ from rest_framework.permissions import (
     SAFE_METHODS,
 )
 
-from core.models import Post
-from news.serializers import PostSerializer
+from core.models import Post, Comment
+from news.serializers import PostSerializer, CommentSerializer
 
 
 class IsAuthorOrReadOnly(BasePermission):
@@ -20,14 +20,26 @@ class IsAuthorOrReadOnly(BasePermission):
         return obj.author == request.user
 
 
-class PostViewSet(viewsets.ModelViewSet):
-    """Endpoint to manage news posts"""
+class BaseObjectViewSet(viewsets.ModelViewSet):
+    """Viewset to make CRUD operations with models"""
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsAuthorOrReadOnly)
+
+    def perform_create(self, serializer):
+        """Create new object"""
+        serializer.save(author=self.request.user)
+
+
+class PostViewSet(BaseObjectViewSet):
+    """Endpoint to manage news posts"""
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-    def perform_create(self, serializer):
-        """Create new post"""
-        serializer.save(author=self.request.user)
+
+class CommentViewSet(BaseObjectViewSet):
+    """Endpoint to manage comments"""
+
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer

@@ -20,7 +20,7 @@ class Post(models.Model):
 class Comment(models.Model):
     """Posts' comment model"""
 
-    content = models.CharField(max_length=255)
+    content = models.CharField(max_length=255, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey(
