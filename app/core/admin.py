@@ -21,6 +21,21 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
+class PostAdmin(admin.ModelAdmin):
+    """Admin panel for Post model"""
+
+    list_display = ['title', 'author', 'created_at']
+    list_filter = ['author', 'created_at']
+
+
+class CommentAdmin(admin.ModelAdmin):
+    """Admin panel for Comment model"""
+
+    list_display = ['post', 'author', 'created_at']
+    list_filter = ['post', 'author']
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(models.Post)
+admin.site.register(models.Post, PostAdmin)
+admin.site.register(models.Comment, CommentAdmin)
