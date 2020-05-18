@@ -22,6 +22,11 @@ def post_comments_url(post_id):
     return reverse('news:post-comments', args=[post_id])
 
 
+def upvote_url(post_id):
+    """Create and return url to upvote post"""
+    return reverse('news:post-upvote', args=[post_id])
+
+
 class PostEndpointTests(TestCase):
     """Tests CRUD Post operations"""
 
@@ -117,6 +122,20 @@ class PostEndpointTests(TestCase):
         comments = Comment.objects.filter(post=post).order_by('created_at')
         serializer = PostCommentsSerializer(comments, many=True)
         self.assertEqual(res.data, serializer.data)
+
+    def test_upvote_post(self):
+        """Test user can upvote post"""
+        post = Post.objects.create(
+            title='Post', link='https://www.link.com', author=self.user
+        )
+
+        url = upvote_url(post.id)
+        res = self.client.get(url)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        post.refresh_from_db()
+        self.assertEqual(post.upvotes, 1)
 
 
 class UserLimitationOnUpdateOperationsTests(TestCase):
