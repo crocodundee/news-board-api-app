@@ -31,12 +31,14 @@ class UserAdminTests(TestCase):
         self.assertEqual(res.status_code, 200)
 
 
-class UserAdminPublicUsersTests(TestCase):
-    """Test UserAdmin via public users"""
+class UserAdminNoStaffUsersTests(TestCase):
+    """Test UserAdmin via nostaff users"""
 
     def setUp(self):
         self.client = Client()
-        self.user = get_user_model().objects.create_user("testuser", "testpass")
+        self.user = get_user_model().objects.create_user(
+            "testuser", "testpass"
+        )
         self.client.force_login(user=self.user)
 
     def test_admin_page_not_available(self):
