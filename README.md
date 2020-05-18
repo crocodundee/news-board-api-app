@@ -1,8 +1,8 @@
 # news-board-api-app
-_A Web API for news publish
+_A Web API for news publish_
 ### _Before you start:_
 I used Docker to build this app and it requires to install some dependencies to manage this project on your local machine. So be confident in your OS (Windows 10 Pro or any Unix system) which has installed packeges of [python3](https://www.python.org/downloads/), [git](https://www.atlassian.com/git/tutorials/install-git), [Docker](https://docs.docker.com/get-docker/).
-### _You already have:_
+### _Requirements:_
 * Django
 * Django REST Framework
 * psycopg2
