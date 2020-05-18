@@ -5,8 +5,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Post
-from news.serializers import PostSerializer
+from core.models import Post, Comment
+from news.serializers import PostSerializer, PostCommentsSerializer
 
 
 POST_URL = reverse('news:post-list')
@@ -15,6 +15,11 @@ POST_URL = reverse('news:post-list')
 def detail_url(post_id):
     """Create and return post's detail url"""
     return reverse('news:post-detail', args=[post_id])
+
+
+def post_comments_url(post_id):
+    """Create and return url to list post's comments"""
+    return reverse('news:post-comments', args=[post_id])
 
 
 class PostEndpointTests(TestCase):
@@ -91,6 +96,27 @@ class PostEndpointTests(TestCase):
 
         exists = Post.objects.filter(title=post.title).exists()
         self.assertFalse(exists)
+
+    def test_listing_post_comments(self):
+        """Test getting all comments relaited to post"""
+        post = Post.objects.create(
+            title='Post', link='http://www.link.com', author=self.user
+        )
+        Comment.objects.create(
+            content='Comment 1', post=post, author=self.user
+        )
+        Comment.objects.create(
+            content='Comment 2', post=post, author=self.user
+        )
+
+        url = post_comments_url(post.id)
+        res = self.client.get(url)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        comments = Comment.objects.filter(post=post).order_by('created_at')
+        serializer = PostCommentsSerializer(comments, many=True)
+        self.assertEqual(res.data, serializer.data)
 
 
 class UserLimitationOnUpdateOperationsTests(TestCase):

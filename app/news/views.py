@@ -1,13 +1,19 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import (
     IsAuthenticated,
     BasePermission,
     SAFE_METHODS,
 )
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from core.models import Post, Comment
-from news.serializers import PostSerializer, CommentSerializer
+from news.serializers import (
+    PostSerializer,
+    CommentSerializer,
+    PostCommentsSerializer,
+)
 
 
 class IsAuthorOrReadOnly(BasePermission):
@@ -36,6 +42,17 @@ class PostViewSet(BaseObjectViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    @action(detail=True, url_name='comments', url_path='comments')
+    def list_comments(self, request, pk=None):
+        """List all post's comments"""
+        post = self.get_object()
+        comments = Comment.objects.filter(post=post).order_by('created_at')
+        if comments:
+            serializer = PostCommentsSerializer(comments, many=True)
+            return Response(serializer.data, status.HTTP_200_OK)
+
+        return Response({'info': 'Post have not comments'}, status.HTTP_200_OK)
 
 
 class CommentViewSet(BaseObjectViewSet):

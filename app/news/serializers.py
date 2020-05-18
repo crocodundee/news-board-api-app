@@ -19,3 +19,12 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
         read_only_fields = ('id', 'created_at', 'author')
+
+
+class PostCommentsSerializer(serializers.ModelSerializer):
+    """Serializer for listing comments relaited to post"""
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'created_at', 'content', 'author')
+        read_only_fields = ('id', 'created_at', 'content', 'author')
