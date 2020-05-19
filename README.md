@@ -29,3 +29,6 @@ I used Docker to build this app and it requires to install some dependencies to 
     ```
     docker-compose up
     ```
+
+### _Demo-version_:
+Visit a _[news-board-api-app](https://news-board-api-app.herokuapp.com/)_ to try API
