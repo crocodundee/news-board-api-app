@@ -30,5 +30,5 @@ I used Docker to build this app and it requires to install some dependencies to 
     docker-compose up
     ```
 
-### _Demo-version_:
-Visit a _[news-board-api-app](https://news-board-api-app.herokuapp.com/)_ to try API
+### _Demo-version:_  [news-board-api-app](https://news-board-api-app.herokuapp.com/)
+### _Postman docs_ : [api-collection](https://www.getpostman.com/collections/476f834f47fa04dabc99)
