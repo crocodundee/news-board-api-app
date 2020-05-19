@@ -26,6 +26,16 @@ class IsAuthorOrReadOnly(BasePermission):
         return obj.author == request.user
 
 
+class IsUpvoteUser(BasePermission):
+    """Permission to upvote posts by readers"""
+
+    def has_object_permission(self, request, view, obj):
+        """Check is current user not a post author"""
+        if request.user.is_authenticated:
+            return obj.author != request.user
+        return False
+
+
 class BaseObjectViewSet(viewsets.ModelViewSet):
     """Viewset to make CRUD operations with models"""
 
@@ -51,7 +61,7 @@ class PostViewSet(BaseObjectViewSet):
         serializer = PostCommentsSerializer(comments, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
 
-    @action(detail=True)
+    @action(detail=True, permission_classes=[IsUpvoteUser])
     def upvote(self, request, pk=None):
         """Upvote post"""
         post = self.get_object()

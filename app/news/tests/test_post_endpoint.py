@@ -132,10 +132,10 @@ class PostEndpointTests(TestCase):
         url = upvote_url(post.id)
         res = self.client.get(url)
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
 
         post.refresh_from_db()
-        self.assertEqual(post.upvotes, 1)
+        self.assertEqual(post.upvotes, 0)
 
 
 class UserLimitationOnUpdateOperationsTests(TestCase):
@@ -169,3 +169,15 @@ class UserLimitationOnUpdateOperationsTests(TestCase):
         res = self.client.delete(url)
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_user_can_upvote_post(self):
+        """Testing upvote permissions"""
+        url = upvote_url(self.post.id)
+        res = self.client.get(url)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.upvotes, 1)
+
+        res = self.client.post(url)
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
