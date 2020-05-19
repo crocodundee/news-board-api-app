@@ -48,14 +48,32 @@ class BaseObjectViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(BaseObjectViewSet):
-    """Endpoint to manage news posts"""
+    """
+    list:
+    Return a list of the exiting posts
+
+    create:
+    Create new post
+
+    read:
+    Get post detail information
+
+    update:
+    Update post information
+
+    partial_update:
+    Update some post attributes
+
+    delete:
+    Delete post from the database
+    """
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
     @action(detail=True)
     def comments(self, request, pk=None):
-        """List all post's comments"""
+        """Return a list of comments relaited to post"""
         post = self.get_object()
         comments = Comment.objects.filter(post=post).order_by('created_at')
         serializer = PostCommentsSerializer(comments, many=True)
@@ -63,7 +81,7 @@ class PostViewSet(BaseObjectViewSet):
 
     @action(detail=True, permission_classes=[IsUpvoteUser])
     def upvote(self, request, pk=None):
-        """Upvote post"""
+        """Increate post's upvote counter"""
         post = self.get_object()
         post.upvotes += 1
         post.save()
@@ -72,7 +90,25 @@ class PostViewSet(BaseObjectViewSet):
 
 
 class CommentViewSet(BaseObjectViewSet):
-    """Endpoint to manage comments"""
+    """
+    list:
+    Return a list of all comments
+
+    create:
+    Create new comment
+
+    read:
+    Get comment's details
+
+    update:
+    Update comment content
+
+    partial_update:
+    Update some comment attributes
+
+    delete:
+    Delete comment from the database
+    """
 
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer

@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+{% if object_list %}
+  <ul class="list-group">
+  {% for obj in object_list %}
+      <li class="list-group-item">
+          <h5>{{ obj.title }} <a class="small text-muted" href={{ obj.link }}>({{ obj.get_link_domain }})</a></h5>
+          <small class="text-muted">{{ obj.upvotes }} points by {{ obj.author.username }} | {{ obj.created_at }} | {{ obj.get_comments_total }} comments</small>
+      </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>No posts created!</p>
+{% endif %}
+{% endblock %}

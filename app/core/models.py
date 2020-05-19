@@ -16,6 +16,15 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    def get_link_domain(self):
+        """Extract link domain"""
+        domain = self.link.split('/')[2].split('.')
+        return ".".join(domain[1:])
+
+    def get_comments_total(self):
+        """Get comments count"""
+        return Comment.objects.filter(post__id=self.id).count()
+
 
 class Comment(models.Model):
     """Posts' comment model"""
