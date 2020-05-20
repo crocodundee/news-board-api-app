@@ -9,7 +9,7 @@ I used Docker to build this app and it requires to install some dependencies to 
 * flake8
 * black
 ### _Lets begin!_
-1. Clone this repository to your local machine with specific project name
+1. Clone this repository to your local machine
       ```
       git clone http://github.com/crocodundee/news-board-api-app.git
       ```
